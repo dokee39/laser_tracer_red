@@ -17,14 +17,21 @@
 // TODO 另外不能为 0 的问题？ atan2()
 void deg2normal_cal(dot_t *pdot)
 {
-    pdot->x.deg_normal = pdot->x.deg * (atan2(pdot->x.pos, h) / atan2(pdot->x.pos, sqrt(pow(h, 2) + pow(pdot->y.pos, 2))));
-    pdot->y.deg_normal = pdot->y.deg * (atan2(pdot->y.pos, h) / atan2(pdot->y.pos, sqrt(pow(h, 2) + pow(pdot->x.pos, 2))));
+    pdot->x.deg_normal = pdot->x.deg * (atan2(pdot->x.pos - dot_h.x.pos, h) / atan2(pdot->x.pos - dot_h.x.pos, sqrt(pow(h, 2) + pow(pdot->y.pos - dot_h.y.pos, 2))));
+    pdot->y.deg_normal = pdot->y.deg * (atan2(pdot->y.pos - dot_h.y.pos, h) / atan2(pdot->y.pos - dot_h.y.pos, sqrt(pow(h, 2) + pow(pdot->x.pos - dot_h.x.pos, 2))));
 }
 
 void normal2deg_cal(dot_t *pdot)
 {
-    pdot->x.deg_normal = pdot->x.deg * (atan2(pdot->x.pos, sqrt(pow(h, 2) + pow(pdot->y.pos, 2))) / atan2(pdot->x.pos, h));
-    pdot->y.deg_normal = pdot->y.deg * (atan2(pdot->y.pos, sqrt(pow(h, 2) + pow(pdot->x.pos, 2))) / atan2(pdot->y.pos, h));
+    pdot->x.deg_normal = pdot->x.deg * (atan2(pdot->x.pos - dot_h.x.pos, sqrt(pow(h, 2) + pow(pdot->y.pos - dot_h.y.pos, 2))) / atan2(pdot->x.pos - dot_h.x.pos, h));
+    pdot->y.deg_normal = pdot->y.deg * (atan2(pdot->y.pos - dot_h.y.pos, sqrt(pow(h, 2) + pow(pdot->x.pos - dot_h.x.pos, 2))) / atan2(pdot->y.pos - dot_h.y.pos, h));
+}
+
+void pos2deg_cal(dot_t*pdot)
+{
+    pdot->x.deg_normal = atan2(pdot->x.pos - dot_h.x.pos, h);
+    pdot->y.deg_normal = atan2(pdot->y.pos - dot_h.y.pos, h);
+    normal2deg_cal(pdot);
 }
 
 void dot_init(dot_t *pdot, float xpos, float ypos, float xdeg, float ydeg)
