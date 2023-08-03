@@ -33,10 +33,16 @@
                     "path": "../Components/Src/adjust.c"
                   },
                   {
+                    "path": "../Components/Src/basic.c"
+                  },
+                  {
                     "path": "../Components/Src/control.c"
                   },
                   {
                     "path": "../Components/Src/motor.c"
+                  },
+                  {
+                    "path": "../Components/Src/OLED.c"
                   }
                 ],
                 "folders": []
@@ -204,6 +210,19 @@
           "proType": 1,
           "speed": 8000,
           "otherCmds": ""
+        },
+        "OpenOCD": {
+          "bin": "",
+          "target": "stm32f1x",
+          "interface": "cmsis-dap",
+          "baseAddr": "0x08000000"
+        },
+        "pyOCD": {
+          "bin": "",
+          "targetName": "cortex_m",
+          "baseAddr": "0x08000000",
+          "speed": "4M",
+          "config": ".eide/laser_tracer_red.pyocd.yaml"
         }
       },
       "custom_dep": {

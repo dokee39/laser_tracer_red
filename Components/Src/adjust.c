@@ -9,36 +9,19 @@
  *
  */
 
+#include "adjust.h"
 #include "main.h"
 #include "control.h"
 
-#define KEY_DELAY 2u          // 表示按键消抖的时间，为 TIM_TASK_INTERVAL 的倍数 -> 50ms
-#define KEY_CONTIUNE_TIME 40u // 表示按键连续触发的时间，为 TIM_TASK_INTERVAL 的倍数 -> 1000ms
-#define KEY_CONTIUNE_CONTIUNE_TIME 20u // 表示按键再次连续触发的时间，为 TIM_TASK_INTERVAL 的倍数 -> 500ms
+#include "OLED.h"
 
-void Adjust_ZoomIn(void)
-{
-    boundary.dot1.x -= 0.5f;
-    boundary.dot1.y += 0.5f;
-    boundary.dot2.x += 0.5f;
-    boundary.dot2.y += 0.5f;
-    boundary.dot3.x += 0.5f;
-    boundary.dot3.y -= 0.5f;
-    boundary.dot4.x -= 0.5f;
-    boundary.dot4.y -= 0.5f;
-}
+adjust_range_t adjust_range;
 
-void Adjust_ZoomOut(void)
-{
-    boundary.dot1.x += 0.5f;
-    boundary.dot1.y -= 0.5f;
-    boundary.dot2.x -= 0.5f;
-    boundary.dot2.y -= 0.5f;
-    boundary.dot3.x -= 0.5f;
-    boundary.dot3.y += 0.5f;
-    boundary.dot4.x += 0.5f;
-    boundary.dot4.y += 0.5f;
-}
+#define KEY_DELAY 2u // 表示按键消抖的时间，为 TIM_TASK_INTERVAL 的倍数 -> 50ms
+// #define KEY_CONTIUNE_TIME 40u // 表示按键连续触发的时间，为 TIM_TASK_INTERVAL 的倍数 -> 1000ms
+// #define KEY_CONTIUNE_CONTIUNE_TIME 20u // 表示按键再次连续触发的时间，为 TIM_TASK_INTERVAL 的倍数 -> 500ms
+
+#define ADJUST_STEP 0.2f // 调整的步进
 
 /**
  * @brief
@@ -46,31 +29,97 @@ void Adjust_ZoomOut(void)
  */
 void Adjust_Task(void)
 {
-    static uint16_t cnt_zoom_in = 0;
-    static uint16_t cnt_zoom_out = 0;
+    static uint16_t cnt_up = 0;
+    static uint16_t cnt_down = 0;
+    static uint16_t cnt_left = 0;
+    static uint16_t cnt_right = 0;
 
-    if (HAL_GPIO_ReadPin(adjust_zoom_in_GPIO_Port, adjust_zoom_in_Pin) == GPIO_PIN_RESET)
-        cnt_zoom_in++;
-    else
-        cnt_zoom_in = 0;
-    if (HAL_GPIO_ReadPin(adjust_zoom_out_GPIO_Port, adjust_zoom_out_Pin) == GPIO_PIN_RESET)
-        cnt_zoom_out++;
-    else
-        cnt_zoom_out = 0;
+    static uint16_t cnt_OK = 0;
+    static uint8_t is_last_OK = 0;
 
-    if (cnt_zoom_in == KEY_DELAY)
-    Adjust_ZoomIn();
-    else if (cnt_zoom_in == KEY_CONTIUNE_TIME)
+    float delta_degree_x = 0.0f;
+    float delta_degree_y = 0.0f;
+
+    if (HAL_GPIO_ReadPin(adjust_up_GPIO_Port, adjust_up_Pin) == GPIO_PIN_RESET)
+        cnt_up++;
+    else
+        cnt_up = 0;
+    if (HAL_GPIO_ReadPin(adjust_down_GPIO_Port, adjust_down_Pin) == GPIO_PIN_RESET)
+        cnt_down++;
+    else
+        cnt_down = 0;
+    if (HAL_GPIO_ReadPin(adjust_left_GPIO_Port, adjust_left_Pin) == GPIO_PIN_RESET)
+        cnt_left++;
+    else
+        cnt_left = 0;
+    if (HAL_GPIO_ReadPin(adjust_right_GPIO_Port, adjust_right_Pin) == GPIO_PIN_RESET)
+        cnt_right++;
+    else
+        cnt_right = 0;
+
+    if (cnt_up >= KEY_DELAY)
     {
-        cnt_zoom_in = KEY_CONTIUNE_CONTIUNE_TIME;
-        Adjust_ZoomIn();
+        cnt_up = 0;
+        delta_degree_x += ADJUST_STEP;
+    }
+    if (cnt_down >= KEY_DELAY)
+    {
+        cnt_down = 0;
+        delta_degree_x -= ADJUST_STEP;
+    }
+    if (cnt_left >= KEY_DELAY)
+    {
+        cnt_left = 0;
+        delta_degree_y += ADJUST_STEP;
+    }
+    if (cnt_right >= KEY_DELAY)
+    {
+        cnt_right = 0;
+        delta_degree_y -= ADJUST_STEP;
     }
 
-    if (cnt_zoom_in == KEY_DELAY)
-    Adjust_ZoomOut();
-    else if (cnt_zoom_in == KEY_CONTIUNE_TIME)
+    if (delta_degree_x != 0 || delta_degree_y != 0)
     {
-        cnt_zoom_in = KEY_CONTIUNE_CONTIUNE_TIME;
-        Adjust_ZoomOut();
+        Control_Move(delta_degree_x, delta_degree_y);
     }
+
+    if (HAL_GPIO_ReadPin(adjust_OK_GPIO_Port, adjust_OK_Pin) == GPIO_PIN_RESET)
+    {
+        if (!is_last_OK)
+        {
+            cnt_OK++;
+            is_last_OK = 1;
+
+            switch (cnt_OK)
+            {
+            case 1:
+                boundary.dot1.x.deg = motor_x_degree;
+                boundary.dot1.y.deg = motor_y_degree;
+                break;
+            case 2:
+                boundary.dot2.x.deg = motor_x_degree;
+                boundary.dot2.y.deg = motor_y_degree;
+                break;
+            case 3:
+                boundary.dot3.x.deg = motor_x_degree;
+                boundary.dot3.y.deg = motor_y_degree;
+                break;
+            case 4:
+                boundary.dot4.x.deg = motor_x_degree;
+                boundary.dot4.y.deg = motor_y_degree;
+                break;
+            default:
+                cnt_OK = 0;
+                break;
+            }
+
+            OLED_ShowString(4, 1, "OK: ");
+            OLED_ShowNum(4, 5, cnt_OK, 1);
+        }
+    }
+    else
+    {
+        is_last_OK = 0;
+    }
+    
 }

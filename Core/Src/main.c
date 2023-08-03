@@ -23,6 +23,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "OLED.h"
+#include "task_process.h"
 #include "control.h"
 /* USER CODE END Includes */
 
@@ -89,7 +91,9 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
+    OLED_Init();
     Control_Init();
+    TaskProcess_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -97,6 +101,8 @@ int main(void)
     while (1)
     {
         Control_Task();
+        OLED_ShowString(1, 1, "Link Start!");
+        HAL_Delay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

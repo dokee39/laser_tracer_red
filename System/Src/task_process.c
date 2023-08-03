@@ -30,6 +30,10 @@ void TaskProcess_Init(void)
     timeslice_task_init(&task_adjust, Adjust_Task, 1, TASK_CNT_ADJUST);
     timeslice_task_add(&task_adjust);
     /* 将时间片任务结构体初始化并添加到侵入式链表中 END */
+
+    /* 将时间片任务结构体所用 timer 初始化 BEGIN */
+    HAL_TIM_Base_Start_IT(&htim_task);
+    /* 将时间片任务结构体所用 timer 初始化 END */
 }
 
 /* 将任务用的定时中断放在这里 BEGIN */

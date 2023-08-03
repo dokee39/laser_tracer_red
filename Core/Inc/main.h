@@ -57,10 +57,20 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define adjust_zoom_out_Pin GPIO_PIN_11
-#define adjust_zoom_out_GPIO_Port GPIOA
-#define adjust_zoom_in_Pin GPIO_PIN_12
-#define adjust_zoom_in_GPIO_Port GPIOA
+#define adjust_OK_Pin GPIO_PIN_5
+#define adjust_OK_GPIO_Port GPIOC
+#define adjust_down_Pin GPIO_PIN_11
+#define adjust_down_GPIO_Port GPIOA
+#define adjust_up_Pin GPIO_PIN_12
+#define adjust_up_GPIO_Port GPIOA
+#define adjust_right_Pin GPIO_PIN_10
+#define adjust_right_GPIO_Port GPIOC
+#define adjust_left_Pin GPIO_PIN_11
+#define adjust_left_GPIO_Port GPIOC
+#define OLED_SCL_Pin GPIO_PIN_8
+#define OLED_SCL_GPIO_Port GPIOB
+#define OLED_SDA_Pin GPIO_PIN_9
+#define OLED_SDA_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 /* 定时器及其通道马甲及定时时间间隔说明 BEGIN */
@@ -74,29 +84,6 @@ void Error_Handler(void);
 #define htim_task htim6
 #define TIM_TASK_INTERVAL 25u // 单位：ms
 /* 定时器及其通道马甲及定时时间间隔说明 END */
-
-/* 通用结构体 BEGIN */
-typedef struct 
-{
-    float x;
-    float y;
-} dot_degree_t;
-
-/*
-  *********
-  * 1   2 *
-  *       *
-  * 4   3 *
-  *********
-*/
-typedef struct 
-{
-    dot_degree_t dot1;
-    dot_degree_t dot2;
-    dot_degree_t dot3;
-    dot_degree_t dot4;
-} quadrangle_t;
-/* 通用结构体 END */
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
