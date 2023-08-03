@@ -14,7 +14,7 @@
 #include "control.h"
 
 // TODO 如果计算时间太长的话就改成插值
-// TODO 另外不能为 0 的问题？ atan2()
+// TODO 找出所有可能的除 0
 void deg2normal_cal(dot_t *pdot)
 {
     pdot->x.deg_normal = pdot->x.deg * (atan2(pdot->x.pos - dot_h.x.pos, h) / atan2(pdot->x.pos - dot_h.x.pos, sqrt(pow(h, 2) + pow(pdot->y.pos - dot_h.y.pos, 2))));
@@ -34,13 +34,11 @@ void pos2deg_cal(dot_t*pdot)
     normal2deg_cal(pdot);
 }
 
-void dot_init(dot_t *pdot, float xpos, float ypos, float xdeg, float ydeg)
+void dot_init(dot_t *pdot, float xpos, float ypos)
 {
     pdot->x.pos = xpos;
     pdot->y.pos = ypos;
-    pdot->x.deg = xdeg;
-    pdot->y.deg = ydeg;
-    deg2normal_cal(pdot);
+    pos2deg_cal(pdot);
 }
 
 

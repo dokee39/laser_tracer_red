@@ -7,6 +7,7 @@
 #include "motor.h"
 #include "main.h"
 
+#include <stdio.h>
 #include "OLED.h"
 
 static void abs_limit(float *a, float ABS_MAX)

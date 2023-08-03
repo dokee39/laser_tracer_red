@@ -15,6 +15,7 @@
 #include "main.h"
 #include "control.h"
 #include "basic.h"
+#include "task_process.h"
 
 #include "OLED.h"
 
@@ -24,7 +25,7 @@ adjust_range_t adjust_range;
 // #define KEY_CONTIUNE_TIME 40u // 表示按键连续触发的时间，为 TIM_TASK_INTERVAL 的倍数 -> 1000ms
 // #define KEY_CONTIUNE_CONTIUNE_TIME 20u // 表示按键再次连续触发的时间，为 TIM_TASK_INTERVAL 的倍数 -> 500ms
 
-#define ADJUST_STEP 0.2f // 调整的步进
+#define ADJUST_STEP 0.35f // 调整的步进
 
 void Adjust_DotInLine_Cal(dot_in_line_t *pdot_in_line, float theta1, float theta2)
 {
@@ -158,7 +159,10 @@ void Adjust_Task(void)
                 break;
             default:
                 cnt_OK = 0;
-                OLED_ShowString(4, 1, "OK: 0        ");
+                OLED_ShowString(4, 1, "OK: EXEC     ");
+                Control_Boundary_Walk();
+                Task_Add(&task_control);
+                Task_Remove(&task_adjust);
                 break;
             }
         }

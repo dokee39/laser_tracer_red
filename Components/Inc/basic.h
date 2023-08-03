@@ -42,6 +42,7 @@ typedef struct
 
 void deg2normal_cal(dot_t *pdot);
 void normal2deg_cal(dot_t *pdot);
-void dot_init(dot_t *pdot, float xpos, float ypos, float xdeg, float ydeg);
+void pos2deg_cal(dot_t*pdot);
+void dot_init(dot_t *pdot, float xpos, float ypos);
 
 #endif // !_BASIC_H_

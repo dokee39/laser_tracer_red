@@ -100,8 +100,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
     while (1)
     {
-        Control_Task();
-        OLED_ShowString(1, 1, "Link Start!");
         HAL_Delay(1000);
     /* USER CODE END WHILE */
 
