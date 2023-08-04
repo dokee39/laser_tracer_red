@@ -15,8 +15,8 @@
 typedef struct
 {
     float pos;
+    float pos_shift;
     float deg;
-    float deg_normal;
 } dot_in_line_t;
 
 typedef struct
@@ -40,9 +40,7 @@ typedef struct
     dot_t dot4;
 } quadrangle_t;
 
-void deg2normal_cal(dot_t *pdot);
-void normal2deg_cal(dot_t *pdot);
-void pos2deg_cal(dot_t*pdot);
+void deg2shift_cal(dot_t *pdot);
 void dot_init(dot_t *pdot, float xpos, float ypos);
 
 #endif // !_BASIC_H_
