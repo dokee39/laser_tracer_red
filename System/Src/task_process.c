@@ -41,6 +41,7 @@ void TaskProcess_Init(void)
 
     /* 将需要上电运行的任务添加到侵入式链表中 BEGIN */
     timeslice_task_add(&task_adjust);
+    timeslice_task_add(&task_control);
     /* 将需要上电运行的任务添加到侵入式链表中 END */
 
     /* 将时间片任务结构体所用 timer 初始化 BEGIN */
@@ -89,7 +90,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
             {
                 timeslice_task_add(task_to_add[i]);
                 task_to_add[i] = NULL;
-            } else {
+            }
+            else
+            {
                 break;
             }
         }
@@ -97,9 +100,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         {
             if (task_to_remove[i] != NULL)
             {
-                timeslice_task_del(task_to_add[i]);
+                timeslice_task_del(task_to_remove[i]);
                 task_to_remove[i] = NULL;
-            } else {
+            }
+            else
+            {
                 break;
             }
         }

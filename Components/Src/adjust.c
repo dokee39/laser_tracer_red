@@ -16,6 +16,7 @@
 #include "control.h"
 #include "basic.h"
 #include "task_process.h"
+#include "motor.h"
 
 #include "OLED.h"
 
@@ -43,6 +44,9 @@ void Adjust_Task(void)
 
     float delta_degree_x = 0.0f;
     float delta_degree_y = 0.0f;
+    
+    float origin_xdeg_temp = 0.0f;
+    float origin_ydeg_temp = 0.0f;
 
     if (HAL_GPIO_ReadPin(adjust_up_GPIO_Port, adjust_up_Pin) == GPIO_PIN_RESET)
         cnt_up++;
@@ -97,34 +101,38 @@ void Adjust_Task(void)
             switch (cnt_OK)
             {
             case 1:
+                x_deg_offset = motor_x_degree;
+                y_deg_offset = motor_y_degree;
+                OLED_ShowString(4, 1, "OK: 1 offset  ");
+                break;
+            case 2:
                 boundary.dot1.x.deg = motor_x_degree;
                 boundary.dot1.y.deg = motor_y_degree;
                 deg2shift_cal(&boundary.dot1);
-                OLED_ShowString(4, 1, "OK: 1        ");
+                OLED_ShowString(4, 1, "OK: 2 rect1   ");
                 break;
-            case 2:
+            case 3:
                 boundary.dot2.x.deg = motor_x_degree;
                 boundary.dot2.y.deg = motor_y_degree;
                 deg2shift_cal(&boundary.dot2);
-                OLED_ShowString(4, 1, "OK: 2        ");
+                OLED_ShowString(4, 1, "OK: 3 rect2   ");
                 break;
-            case 3:
+            case 4:
                 boundary.dot3.x.deg = motor_x_degree;
                 boundary.dot3.y.deg = motor_y_degree;
                 deg2shift_cal(&boundary.dot3);
-                OLED_ShowString(4, 1, "OK: 3        ");
+                OLED_ShowString(4, 1, "OK: 4 rect3   ");
                 break;
-            case 4:
+            case 5:
                 boundary.dot4.x.deg = motor_x_degree;
                 boundary.dot4.y.deg = motor_y_degree;
                 deg2shift_cal(&boundary.dot4);
-                OLED_ShowString(4, 1, "OK: 4        ");
+                OLED_ShowString(4, 1, "OK: 5 rect4   ");
                 break;
             default:
                 cnt_OK = 0;
                 OLED_ShowString(4, 1, "OK: EXEC     ");
                 Control_WalkQuadrangle(&boundary);
-                Task_Add(&task_control);
                 Task_Remove(&task_adjust);
                 break;
             }

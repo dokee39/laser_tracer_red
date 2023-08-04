@@ -9,6 +9,9 @@
 
 #define DRGREE_MAX 45
 
+extern float x_deg_offset;
+extern float y_deg_offset;
+
 void motor_enable(void);
 void motor_output(float degree_x, float degree_y);
 

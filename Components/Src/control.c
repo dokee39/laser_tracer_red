@@ -130,8 +130,8 @@ void Control_WalkLine_Task(void)
     }
     else
     {
-        motor_x_degree = line_list[line_list_head].dot_end.x.deg;
-        motor_y_degree = line_list[line_list_head].dot_end.y.deg;
+        motor_x_degree = pline_walking->dot_end.x.deg;
+        motor_y_degree = pline_walking->dot_end.y.deg;
         motor_output(motor_x_degree, motor_y_degree);
 
         Task_Remove(&task_control_walk_line);
