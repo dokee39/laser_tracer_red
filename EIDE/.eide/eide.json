@@ -92,15 +92,6 @@
         "files": [],
         "folders": [
           {
-            "name": "CMSIS",
-            "files": [
-              {
-                "path": "../Core/Src/system_stm32f1xx.c"
-              }
-            ],
-            "folders": []
-          },
-          {
             "name": "STM32F1xx_HAL_Driver",
             "files": [
               {
@@ -141,6 +132,15 @@
               },
               {
                 "path": "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c"
+              }
+            ],
+            "folders": []
+          },
+          {
+            "name": "CMSIS",
+            "files": [
+              {
+                "path": "../Core/Src/system_stm32f1xx.c"
               }
             ],
             "folders": []
@@ -210,19 +210,6 @@
           "proType": 1,
           "speed": 8000,
           "otherCmds": ""
-        },
-        "OpenOCD": {
-          "bin": "",
-          "target": "stm32f1x",
-          "interface": "cmsis-dap",
-          "baseAddr": "0x08000000"
-        },
-        "pyOCD": {
-          "bin": "",
-          "targetName": "cortex_m",
-          "baseAddr": "0x08000000",
-          "speed": "4M",
-          "config": ".eide/laser_tracer_red.pyocd.yaml"
         }
       },
       "custom_dep": {

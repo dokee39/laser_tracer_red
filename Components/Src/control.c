@@ -21,7 +21,6 @@
 float h = 100.0f;
 // 原点
 dot_t origin;
-dot_t dot_h;
 // 表示边界的矩形
 quadrangle_t boundary;
 
@@ -88,40 +87,42 @@ float motor_y_degree = 0.0f;
  */
 void Control_Line_Add(dot_t *pdot_start, dot_t *pdot_end, float step_max)
 {
-    line_list[line_list_tail].dot_start = *pdot_start;
-    line_list[line_list_tail].dot_end = *pdot_end;
-    line_list[line_list_tail].step_max = step_max;
+    line_t *pline = &line_list[line_list_tail];
 
-    line_list[line_list_tail].delta_x = pdot_start->x.pos - pdot_end->x.pos;
-    line_list[line_list_tail].delta_y = pdot_start->y.pos - pdot_end->y.pos;
+    pline->dot_start = *pdot_start;
+    pline->dot_end = *pdot_end;
+    pline->step_max = step_max;
 
-    if (fabs(line_list[line_list_tail].delta_x) >= fabs(line_list[line_list_tail].delta_y))
+    pline->delta_x = pdot_end->x.pos - pdot_start->x.pos;
+    pline->delta_y = pdot_end->y.pos - pdot_start->y.pos;
+
+    if (fabs(pline->delta_x) >= fabs(pline->delta_y))
     {
-        line_list[line_list_tail].step_num = (uint16_t)fabs(line_list[line_list_tail].delta_x / line_list[line_list_tail].step_max);
+        pline->step_num = (uint16_t)fabs(pline->delta_x / pline->step_max);
     }
     else
     {
-        line_list[line_list_tail].step_num = (uint16_t)fabs(line_list[line_list_tail].delta_y / line_list[line_list_tail].step_max);
+        pline->step_num = (uint16_t)fabs(pline->delta_y / pline->step_max);
     }
 
-    line_list[line_list_tail].step_cnt = 0;
+    pline->step_cnt = 0;
 
     line_list_tail++;
-    if(line_list_tail >= LINE_NUM_MAX)
+    if (line_list_tail >= LINE_NUM_MAX)
         line_list_tail = 0;
 }
 
 void Control_WalkLine_Task(void)
 {
-    line_list[line_list_head].step_cnt++;
-    if (line_list[line_list_head].step_cnt < line_list[line_list_head].step_num)
+    line_t *pline_walking = &line_list[line_list_head];
+
+    pline_walking->step_cnt++;
+    if (pline_walking->step_cnt < pline_walking->step_num)
     {
         dot_t dot_light;
-
-        dot_light.x.pos = line_list[line_list_head].dot_start.x.pos + ((float)line_list[line_list_head].step_cnt / (float)line_list[line_list_head].step_num) * line_list[line_list_head].delta_x;
-        dot_light.y.pos = line_list[line_list_head].dot_start.y.pos + ((float)line_list[line_list_head].step_cnt / (float)line_list[line_list_head].step_num) * line_list[line_list_head].delta_y;
-
-        pos2deg_cal(&dot_light);
+        dot_init(&dot_light,
+                 pline_walking->dot_start.x.pos + ((float)pline_walking->step_cnt / (float)pline_walking->step_num) * pline_walking->delta_x,
+                 pline_walking->dot_start.y.pos + ((float)pline_walking->step_cnt / (float)pline_walking->step_num) * pline_walking->delta_y);
 
         motor_x_degree = dot_light.x.deg;
         motor_y_degree = dot_light.y.deg;
@@ -136,9 +137,9 @@ void Control_WalkLine_Task(void)
         Task_Remove(&task_control_walk_line);
 
         line_list_head++;
-        if(line_list_head >= LINE_NUM_MAX)
+        if (line_list_head >= LINE_NUM_MAX)
             line_list_head = 0;
-        
+
         is_walking_line = 0;
     }
 }
@@ -163,26 +164,39 @@ void Control_Move(float delta_degree_x, float delta_degree_y)
 void Control_Init(void)
 {
     // TODO 初始化的时候要不要指定可能的角度
-    dot_init(&(origin), 0.0f, 0.0f);
-    dot_init(&(dot_h), 0.0f, 0.0f);
+    origin.x.pos = 0.0f;
+    origin.y.pos = 0.0f;
 
-    dot_init(&(boundary.dot1), -25.0f, 25.0f);
-    dot_init(&(boundary.dot2), 25.0f, 25.0f);
-    dot_init(&(boundary.dot3), 25.0f, -25.0f);
-    dot_init(&(boundary.dot4), -25.0f, -25.0f);
+    boundary.dot1.x.pos = -25.0f;
+    boundary.dot1.y.pos = 25.0f;
+    boundary.dot2.x.pos = 25.0f;
+    boundary.dot2.y.pos = 25.0f;
+    boundary.dot3.x.pos = 25.0f;
+    boundary.dot3.y.pos = -25.0f;
+    boundary.dot4.x.pos = -25.0f;
+    boundary.dot4.y.pos = -25.0f;
 
     motor_enable();
+
+    // TODO 从BKP读取
+
     // TODO Control_WalkTo_Origin();
 }
 
-void Control_Boundary_Walk(void)
+/**
+ * @brief
+ * @note from origin
+ *
+ * @param pquadrangle
+ */
+void Control_WalkQuadrangle(quadrangle_t *pquadrangle)
 {
-    Control_Line_Add(&origin, &boundary.dot1, STEP_MAX_HIGH_SPEED);
-    Control_Line_Add(&boundary.dot1, &boundary.dot2, STEP_MAX_LOW_SPEED);
-    Control_Line_Add(&boundary.dot2, &boundary.dot3, STEP_MAX_LOW_SPEED);
-    Control_Line_Add(&boundary.dot3, &boundary.dot4, STEP_MAX_LOW_SPEED);
-    Control_Line_Add(&boundary.dot4, &boundary.dot1, STEP_MAX_LOW_SPEED);
-    Control_Line_Add(&boundary.dot1, &origin, STEP_MAX_HIGH_SPEED);
+    Control_Line_Add(&origin, &pquadrangle->dot1, STEP_MAX_HIGH_SPEED);
+    Control_Line_Add(&pquadrangle->dot1, &pquadrangle->dot2, STEP_MAX_LOW_SPEED);
+    Control_Line_Add(&pquadrangle->dot2, &pquadrangle->dot3, STEP_MAX_LOW_SPEED);
+    Control_Line_Add(&pquadrangle->dot3, &pquadrangle->dot4, STEP_MAX_LOW_SPEED);
+    Control_Line_Add(&pquadrangle->dot4, &pquadrangle->dot1, STEP_MAX_LOW_SPEED);
+    Control_Line_Add(&pquadrangle->dot1, &origin, STEP_MAX_HIGH_SPEED);
 }
 
 /**
@@ -191,7 +205,7 @@ void Control_Boundary_Walk(void)
  */
 void Control_Task(void)
 {
-    if (is_walking_line == 0 &&line_list_head != line_list_tail)
+    if (is_walking_line == 0 && line_list_head != line_list_tail)
     {
         Task_Add(&task_control_walk_line);
         is_walking_line = 1;
