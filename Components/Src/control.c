@@ -16,6 +16,7 @@
 #include "motor.h"
 #include "basic.h"
 #include "task_process.h"
+#include "timesilce_task.h"
 
 // 表示激光笔到屏幕的距离
 float h = 100.0f;
@@ -58,25 +59,70 @@ float motor_x_degree = 0.0f;
 float motor_y_degree = 0.0f;
 
 /**
- * @brief // TODO 先手动
+ * @brief 电机初始化等，把上电需要做的事情都放在里面
  *
  */
-// void Control_ResetTo_Origin(void)
-// {
-//     if (is_walking_line)
-//     {
-//         is_walking_line = 0;
+void Control_Init(void)
+{
+    // TODO 初始化的时候要不要指定可能的角度
+    origin.x.pos = 0.0f;
+    origin.x.pos_shift = 0.0f;
+    origin.x.deg = 0.0f;
+    origin.y.pos = 0.0f;
+    origin.y.pos_shift = 0.0f;
+    origin.y.deg = 0.0f;
 
-//         Task_Remove(&task_control_walk_line);
+    boundary.dot1.x.pos = -25.0f;
+    boundary.dot1.x.pos_shift = -25.0f;
+    boundary.dot1.x.deg = -13.63f;
 
-//         line_list_head = 0;
-//         line_list_tail = 0;
+    boundary.dot1.y.pos = 25.0f;
+    boundary.dot1.y.pos_shift = 25.0f;
+    boundary.dot1.y.deg = 13.63f;
 
-//         dot_t dot_now;
-//         dot_init(&dot_now, )
-//         Control_Line_Add()
-//     }
-// }
+    boundary.dot2.x.pos = 25.0f;
+    boundary.dot2.x.pos_shift = 25.0f;
+    boundary.dot2.x.deg = 13.63f;
+
+    boundary.dot2.y.pos = 25.0f;
+    boundary.dot2.y.pos_shift = 25.0f;
+    boundary.dot2.y.deg = 13.63f;
+
+    boundary.dot3.x.pos = 25.0f;
+    boundary.dot3.x.pos_shift = 25.0f;
+    boundary.dot3.x.deg = 13.63f;
+
+    boundary.dot3.y.pos = -25.0f;
+    boundary.dot3.y.pos_shift = -25.0f;
+    boundary.dot3.y.deg = -13.63f;
+
+    boundary.dot4.x.pos = -25.0f;
+    boundary.dot4.x.pos_shift = -25.0f;
+    boundary.dot4.x.deg = -13.63f;
+
+    boundary.dot4.y.pos = -25.0f;
+    boundary.dot4.y.pos_shift = -25.0f;
+    boundary.dot4.y.deg = -13.63f;
+
+    motor_enable();
+
+    // TODO 从BKP读取
+
+    // Control_WalkTo_Origin(); -> 在 motor_enable 里进行过初始复位了
+}
+
+/**
+ * @brief
+ *
+ * @param delta_degree_x
+ * @param delta_degree_y
+ */
+void Control_Move(float delta_degree_x, float delta_degree_y)
+{
+    motor_x_degree += delta_degree_x;
+    motor_y_degree += delta_degree_y;
+    motor_output(motor_x_degree, motor_y_degree);
+}
 
 /**
  * @brief
@@ -144,43 +190,73 @@ void Control_WalkLine_Task(void)
     }
 }
 
-/**
- * @brief
- *
- * @param delta_degree_x
- * @param delta_degree_y
- */
-void Control_Move(float delta_degree_x, float delta_degree_y)
+// 两个 To_Origin 都是要校准后才能用
+
+void Control_WalkTo_Origin(void)
 {
-    motor_x_degree += delta_degree_x;
-    motor_y_degree += delta_degree_y;
-    motor_output(motor_x_degree, motor_y_degree);
+    dot_t dot_start;
+    if (line_list_head == line_list_tail)
+    {
+        // TODO 这里为了简便起见，认为 pos = pos_shift
+        dot_start.x.deg = motor_x_degree;
+        dot_start.y.deg = motor_y_degree;
+        deg2shift_cal(&dot_start);
+        dot_start.x.pos = dot_start.x.pos_shift;
+        dot_start.y.pos = dot_start.y.pos_shift;
+    }
+    else
+    {
+        if (line_list_tail != 0)
+            dot_start = line_list[line_list_tail - 1].dot_end;
+        else
+            dot_start = line_list[LINE_NUM_MAX - 1].dot_end;
+    }
+
+    Control_Line_Add(&dot_start, &origin, STEP_MAX_HIGH_SPEED);
 }
 
 /**
- * @brief 电机初始化等，把上电需要做的事情都放在里面
+ * @brief // TODO 先手动
  *
  */
-void Control_Init(void)
+// void Control_ResetTo_Origin(void)
+// {
+//     if (is_walking_line)
+//     {
+//         is_walking_line = 0;
+
+//         Task_Remove(&task_control_walk_line);
+
+//         line_list_head = 0;
+//         line_list_tail = 0;
+
+//         dot_t dot_now;
+//         dot_init(&dot_now, )
+//         Control_Line_Add()
+//     }
+// }
+
+// TODO 涉及优先级问题？
+void Control_ResetTo_Origin(void)
 {
-    // TODO 初始化的时候要不要指定可能的角度
-    origin.x.pos = 0.0f;
-    origin.y.pos = 0.0f;
 
-    boundary.dot1.x.pos = -25.0f;
-    boundary.dot1.y.pos = 25.0f;
-    boundary.dot2.x.pos = 25.0f;
-    boundary.dot2.y.pos = 25.0f;
-    boundary.dot3.x.pos = 25.0f;
-    boundary.dot3.y.pos = -25.0f;
-    boundary.dot4.x.pos = -25.0f;
-    boundary.dot4.y.pos = -25.0f;
+    dot_t dot_start;
+    if (is_walking_line)
+    {
+        is_walking_line = 0;
 
-    motor_enable();
+        line_list_head = 0;
+        line_list_tail = 0;
 
-    // TODO 从BKP读取
-
-    // TODO Control_WalkTo_Origin();
+        timeslice_task_del(&task_control_walk_line);
+    }
+    // TODO 这里为了简便起见，认为 pos = pos_shift
+    dot_start.x.deg = motor_x_degree;
+    dot_start.y.deg = motor_y_degree;
+    deg2shift_cal(&dot_start);
+    dot_start.x.pos = dot_start.x.pos_shift;
+    dot_start.y.pos = dot_start.y.pos_shift;
+    Control_Line_Add(&dot_start, &origin, STEP_MAX_HIGH_SPEED);
 }
 
 /**
@@ -208,6 +284,15 @@ void Control_Task(void)
     if (is_walking_line == 0 && line_list_head != line_list_tail)
     {
         Task_Add(&task_control_walk_line);
+        Task_Remove(&task_master);
         is_walking_line = 1;
+    }
+    else if (is_walking_line == 0 && Task_GetNum() == FIXED_TASK_NUM)
+    {
+        Task_Add(&task_master);
+    }
+    else
+    {
+        Task_Remove(&task_master);
     }
 }

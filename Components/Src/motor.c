@@ -29,7 +29,7 @@ static void abs_limit(float *a, float ABS_MAX)
 
 void motor_enable(void)
 {
-    __HAL_TIM_SET_COMPARE(&htim_motor, TIM_CHANNEL_MOTOR_X, (uint16_t)(((x_deg_offset + 135.0f) / 270.0f * 2000.0f) + 500.0f));
+    __HAL_TIM_SET_COMPARE(&htim_motor, TIM_CHANNEL_MOTOR_X, (uint16_t)(((x_deg_offset + 90.0f) / 180.0f * 2000.0f) + 500.0f));
     __HAL_TIM_SET_COMPARE(&htim_motor, TIM_CHANNEL_MOTOR_Y, (uint16_t)(((y_deg_offset + 90.0f) / 180.0f * 2000.0f) + 500.0f));
     HAL_TIM_PWM_Start(&htim_motor, TIM_CHANNEL_MOTOR_X);
     HAL_TIM_PWM_Start(&htim_motor, TIM_CHANNEL_MOTOR_Y);

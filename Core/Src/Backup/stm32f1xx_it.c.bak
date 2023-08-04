@@ -22,6 +22,7 @@
 #include "stm32f1xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "control.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -187,6 +188,19 @@ void SysTick_Handler(void)
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();
   /* USER CODE BEGIN SysTick_IRQn 1 */
+
+    /* key_reset 按键复位 BEGIN */
+    static uint16_t KEY_DELAY = 30u;
+    static uint16_t cnt_reset = 0;
+
+    if (HAL_GPIO_ReadPin(key_reset_GPIO_Port, key_reset_Pin) == GPIO_PIN_RESET)
+        cnt_reset++;
+    else
+        cnt_reset = 0;
+
+    if (cnt_reset == KEY_DELAY)
+        Control_ResetTo_Origin();
+    /* key_reset 按键复位 END */
 
   /* USER CODE END SysTick_IRQn 1 */
 }

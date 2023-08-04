@@ -57,8 +57,16 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define adjust_OK_Pin GPIO_PIN_5
-#define adjust_OK_GPIO_Port GPIOC
+#define key_pause_Pin GPIO_PIN_7
+#define key_pause_GPIO_Port GPIOA
+#define key_switch_Pin GPIO_PIN_4
+#define key_switch_GPIO_Port GPIOC
+#define key_OK_Pin GPIO_PIN_5
+#define key_OK_GPIO_Port GPIOC
+#define key_reset_Pin GPIO_PIN_10
+#define key_reset_GPIO_Port GPIOB
+#define LED_Pin GPIO_PIN_8
+#define LED_GPIO_Port GPIOA
 #define adjust_down_Pin GPIO_PIN_11
 #define adjust_down_GPIO_Port GPIOA
 #define adjust_up_Pin GPIO_PIN_12
@@ -80,9 +88,13 @@ void Error_Handler(void);
 #define TIM_CHANNEL_MOTOR_Y TIM_CHANNEL_4
 #define TIM_MOTOR_INTERVAL 20u // 单位：ms
 
-// task yong timer6
+// task 用 timer6
 #define htim_task htim6
 #define TIM_TASK_INTERVAL 25u // 单位：ms
+
+// reset 用 timer7
+#define htim_reset htim7
+#define TIM_RESET_INTERVAL 36u // 单位：ms
 /* 定时器及其通道马甲及定时时间间隔说明 END */
 /* USER CODE END Private defines */
 

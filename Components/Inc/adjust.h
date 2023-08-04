@@ -12,6 +12,8 @@
 #ifndef _ADJUST_H_
 #define _ADJUST_H_
 
+#include "main.h"
+
 typedef struct
 {
     float x_min;
@@ -27,6 +29,7 @@ typedef struct
 } adjust_range_t;
 
 extern adjust_range_t adjust_range;
+extern uint16_t has_adjusted;
 
 void Adjust_Task(void);
 

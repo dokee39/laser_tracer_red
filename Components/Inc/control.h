@@ -34,11 +34,15 @@ extern float h;
 void Control_Init(void);
 void Control_Move(float delta_degree_x, float delta_degree_y);
 
-void Control_WalkQuadrangle(quadrangle_t *pquadrangle);
 void Control_Line_Add(dot_t *pdot_start, dot_t *pdot_end, float step_max);
+void Control_WalkLine_Task(void);
+
+void Control_WalkTo_Origin(void);
+void Control_ResetTo_Origin(void);
+void Control_WalkQuadrangle(quadrangle_t *pquadrangle);
 
 void Control_Task(void);
-void Control_WalkLine_Task(void);
+
 /* 函数声明 END */
 
 #endif // !_CONTROL_H_
