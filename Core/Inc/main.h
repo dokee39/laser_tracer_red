@@ -96,6 +96,10 @@ void Error_Handler(void);
 #define htim_reset htim7
 #define TIM_RESET_INTERVAL 36u // 单位：ms
 /* 定时器及其通道马甲及定时时间间隔说明 END */
+
+/* 串口马甲 BEGIN */
+#define huart_with_k210 huart2
+/* 串口马甲 END */
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

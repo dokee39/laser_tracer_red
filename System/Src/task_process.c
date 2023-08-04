@@ -24,6 +24,7 @@ TimesilceTaskObj task_control;
 TimesilceTaskObj task_control_walk_line;
 TimesilceTaskObj task_master;
 TimesilceTaskObj task_LED;
+TimesilceTaskObj task_wait_rect_pos;
 /* 添加时间片任务结构体并 extern END */
 
 /* 任务增删的列表 BEGIN */
@@ -40,8 +41,9 @@ void TaskProcess_Init(void)
     timeslice_task_init(&task_adjust, Adjust_Task, 1, TASK_CNT_ADJUST);
     timeslice_task_init(&task_control, Control_Task, 2, TASK_CNT_CONTROL);
     timeslice_task_init(&task_control_walk_line, Control_WalkLine_Task, 3, TASK_CNT_CONTROL_WALK_LINE);
-    timeslice_task_init(&task_master, Master_Task, 4, TASK_CNT_CONTROL_WALK_LINE);
+    timeslice_task_init(&task_master, Master_Task, 4, TASK_CNT_MASTER);
     timeslice_task_init(&task_LED, LED_Task, 5, TASK_CNT_LED);
+    timeslice_task_init(&task_wait_rect_pos, Control_WaitRectPos_Task, 6, TASK_CNT_WAIT_RECT_POS);
     /* 将所有时间片任务结构体初始化并添加到侵入式链表中 END */
 
     /* 将需要上电运行的任务添加到侵入式链表中 BEGIN */

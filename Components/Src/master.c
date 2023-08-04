@@ -15,14 +15,17 @@
 #include "task_process.h"
 #include "control.h"
 #include "adjust.h"
+#include "receive.h"
 
 #define KEY_DELAY 2u
 
-#define TASK_SHOW_NUM 2
+#define TASK_SHOW_NUM 3
+
 typedef enum
 {
     task_adjust_ID0 = 0,
     task_walk_boundary_ID1 = 1,
+    task_walk_rect_ID2 = 2,
 } task_show_ID_t;
 
 void Master_Task(void)
@@ -47,19 +50,25 @@ void Master_Task(void)
     switch (task_show_ID)
     {
     case task_adjust_ID0:
-        OLED_ShowString(1, 1, "-> ADJUST ?   ");
-        OLED_ShowString(2, 1, "              ");
+        OLED_ShowString(1, 1, "--> ADJUST ?    ");
+        OLED_ShowString(2, 1, "                ");
         if (has_adjusted)
-            OLED_ShowString(3, 1, " has adjusted ");
+            OLED_ShowString(3, 1, "  has adjusted  ");
         else
-            OLED_ShowString(3, 1, " not adjusted ");
-        OLED_ShowString(4, 1, "              ");
+            OLED_ShowString(3, 1, "  not adjusted  ");
+        OLED_ShowString(4, 1, "                ");
         break;
     case task_walk_boundary_ID1:
-        OLED_ShowString(1, 1, "-> BOUNDARY ? ");
-        OLED_ShowString(2, 1, "              ");
-        OLED_ShowString(3, 1, "              ");
-        OLED_ShowString(4, 1, "              ");
+        OLED_ShowString(1, 1, "--> BOUNDARY ?  ");
+        OLED_ShowString(2, 1, "                ");
+        OLED_ShowString(3, 1, "                ");
+        OLED_ShowString(4, 1, "                ");
+        break;
+    case task_walk_rect_ID2:
+        OLED_ShowString(1, 1, "--> WALK RECT ? ");
+        OLED_ShowString(2, 1, "                ");
+        OLED_ShowString(3, 1, "                ");
+        OLED_ShowString(4, 1, "                ");
         break;
     default:
         break;
@@ -77,18 +86,27 @@ void Master_Task(void)
         case task_adjust_ID0:
             Task_Add(&task_adjust);
             Task_Remove(&task_master);
-            OLED_ShowString(1, 1, "--  ADJUST  --");
-            OLED_ShowString(2, 1, "              ");
-            OLED_ShowString(3, 1, "              ");
-            OLED_ShowString(4, 1, "              ");
+            OLED_ShowString(1, 1, "---  ADJUST  ---");
+            OLED_ShowString(2, 1, "                ");
+            OLED_ShowString(3, 1, "                ");
+            OLED_ShowString(4, 1, "                ");
             break;
         case task_walk_boundary_ID1:
             Control_WalkQuadrangle(&boundary);
             Task_Remove(&task_master);
-            OLED_ShowString(1, 1, "-- BOUNDARY --");
-            OLED_ShowString(2, 1, "              ");
-            OLED_ShowString(3, 1, "              ");
-            OLED_ShowString(4, 1, "              ");
+            OLED_ShowString(1, 1, "--- BOUNDARY ---");
+            OLED_ShowString(2, 1, "                ");
+            OLED_ShowString(3, 1, "                ");
+            OLED_ShowString(4, 1, "                ");
+            break;
+        case task_walk_rect_ID2:
+            OLED_ShowString(1, 1, "-- WALK  RECT --");
+            OLED_ShowString(2, 1, "                ");
+            OLED_ShowString(3, 1, "                ");
+            OLED_ShowString(4, 1, "                ");
+            Receive_Reset(&uart_receive_with_K210);
+            Task_Add(&task_wait_rect_pos);
+            Task_Remove(&task_master);
             break;
         default:
             break;

@@ -57,6 +57,9 @@
                 "name": "Core",
                 "files": [
                   {
+                    "path": "../Core/Src/dma.c"
+                  },
+                  {
                     "path": "../Core/Src/gpio.c"
                   },
                   {
@@ -73,6 +76,9 @@
                   },
                   {
                     "path": "../Core/Src/tim.c"
+                  },
+                  {
+                    "path": "../Core/Src/usart.c"
                   }
                 ],
                 "folders": []
@@ -189,6 +195,12 @@
               },
               {
                 "path": "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c"
+              },
+              {
+                "path": "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c"
+              },
+              {
+                "path": "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_usart.c"
               },
               {
                 "path": "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c"

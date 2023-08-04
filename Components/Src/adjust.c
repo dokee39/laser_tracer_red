@@ -102,54 +102,48 @@ void Adjust_Task(void)
                 case 1:
                 x_deg_offset = motor_x_degree;
                 y_deg_offset = motor_y_degree;
-                OLED_ShowString(1, 1, "--  ADJUST  --");
-                OLED_ShowString(2, 1, "              ");
-                OLED_ShowString(3, 1, " OK: 1 adjust ");
-                OLED_ShowString(4, 1, "set: offset  ");
+                OLED_ShowString(2, 1, "                ");
+                OLED_ShowString(3, 1, "  OK: 1 adjust  ");
+                OLED_ShowString(4, 1, "  set: offset   ");
                 break;
             case 2:
                 x_deg_offset = motor_x_degree;
                 y_deg_offset = motor_y_degree;
-                OLED_ShowString(1, 1, "--  ADJUST  --");
-                OLED_ShowString(2, 1, "              ");
-                OLED_ShowString(3, 1, " OK: 2 offset ");
-                OLED_ShowString(4, 1, "set: rect1   ");
+                OLED_ShowString(2, 1, "                ");
+                OLED_ShowString(3, 1, "  OK: 2 offset  ");
+                OLED_ShowString(4, 1, "  set: rect1    ");
                 break;
             case 3:
                 boundary.dot1.x.deg = motor_x_degree;
                 boundary.dot1.y.deg = motor_y_degree;
                 deg2shift_cal(&boundary.dot1);
-                OLED_ShowString(1, 1, "--  ADJUST  --");
-                OLED_ShowString(2, 1, "              ");
-                OLED_ShowString(3, 1, " OK: 3 rect1  ");
-                OLED_ShowString(4, 1, "set: rect2   ");
+                OLED_ShowString(2, 1, "                ");
+                OLED_ShowString(3, 1, "  OK: 3 rect1   ");
+                OLED_ShowString(4, 1, "  set: rect2    ");
                 break;
             case 4:
                 boundary.dot2.x.deg = motor_x_degree;
                 boundary.dot2.y.deg = motor_y_degree;
                 deg2shift_cal(&boundary.dot2);
-                OLED_ShowString(1, 1, "--  ADJUST  --");
-                OLED_ShowString(2, 1, "              ");
-                OLED_ShowString(3, 1, " OK: 4 rect2  ");
-                OLED_ShowString(4, 1, "set: rect3   ");
+                OLED_ShowString(2, 1, "                ");
+                OLED_ShowString(3, 1, "  OK: 4 rect2   ");
+                OLED_ShowString(4, 1, "  set: rect3    ");
                 break;
             case 5:
                 boundary.dot3.x.deg = motor_x_degree;
                 boundary.dot3.y.deg = motor_y_degree;
                 deg2shift_cal(&boundary.dot3);
-                OLED_ShowString(1, 1, "--  ADJUST  --");
-                OLED_ShowString(2, 1, "              ");
-                OLED_ShowString(3, 1, " OK: 5 rect3  ");
-                OLED_ShowString(4, 1, "set: rect4  ");
+                OLED_ShowString(2, 1, "                ");
+                OLED_ShowString(3, 1, "  OK: 5 rect3   ");
+                OLED_ShowString(4, 1, "  set: rect4    ");
                 break;
             case 6:
                 boundary.dot4.x.deg = motor_x_degree;
                 boundary.dot4.y.deg = motor_y_degree;
                 deg2shift_cal(&boundary.dot4);
-                OLED_ShowString(1, 1, "--  ADJUST  --");
-                OLED_ShowString(2, 1, "   ALL OK!    ");
-                OLED_ShowString(3, 1, " OK: 6 rect4  ");
-                OLED_ShowString(4, 1, "  --> exit    ");
+                OLED_ShowString(2, 1, "     ALL OK!    ");
+                OLED_ShowString(3, 1, "  OK: 6 rect4   ");
+                OLED_ShowString(4, 1, "    --> exit    ");
                 break;
             default:
                 cnt_OK = 0;

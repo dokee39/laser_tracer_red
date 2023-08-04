@@ -41,6 +41,8 @@ void Control_WalkTo_Origin(void);
 void Control_ResetTo_Origin(void);
 void Control_WalkQuadrangle(quadrangle_t *pquadrangle);
 
+void Control_WaitRectPos_Task(void);
+
 void Control_Task(void);
 
 /* 函数声明 END */

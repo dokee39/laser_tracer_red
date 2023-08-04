@@ -88,9 +88,13 @@ void Error_Handler(void);
 #define TIM_CHANNEL_MOTOR_Y TIM_CHANNEL_4
 #define TIM_MOTOR_INTERVAL 20u // 单位：ms
 
-// task yong timer6
+// task 用 timer6
 #define htim_task htim6
 #define TIM_TASK_INTERVAL 25u // 单位：ms
+
+// reset 用 timer7
+#define htim_reset htim7
+#define TIM_RESET_INTERVAL 36u // 单位：ms
 /* 定时器及其通道马甲及定时时间间隔说明 END */
 /* USER CODE END Private defines */
 

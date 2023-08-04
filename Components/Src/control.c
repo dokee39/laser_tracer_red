@@ -10,6 +10,7 @@
  */
 
 #include <math.h>
+#include <stdio.h>
 
 #include "main.h"
 #include "control.h"
@@ -18,12 +19,15 @@
 #include "task_process.h"
 #include "timesilce_task.h"
 
+#include "receive.h"
+
 // 表示激光笔到屏幕的距离
 float h = 100.0f;
 // 原点
 dot_t origin;
 // 表示边界的矩形
 quadrangle_t boundary;
+quadrangle_t rect_to_walk;
 
 /* WalkLine 相关参数 BEGIN */
 typedef struct
@@ -57,6 +61,10 @@ uint8_t is_walking_line = 0;
 // 记录电机的角度
 float motor_x_degree = 0.0f;
 float motor_y_degree = 0.0f;
+
+static char *cmd_start = "<!";    // 命令包头
+static char *cmd_end = ">!";      // 命令包尾
+static char data[RxMainBuf_SIZE]; // 用于存放收到的数据
 
 /**
  * @brief 电机初始化等，把上电需要做的事情都放在里面
@@ -273,6 +281,31 @@ void Control_WalkQuadrangle(quadrangle_t *pquadrangle)
     Control_Line_Add(&pquadrangle->dot3, &pquadrangle->dot4, STEP_MAX_LOW_SPEED);
     Control_Line_Add(&pquadrangle->dot4, &pquadrangle->dot1, STEP_MAX_LOW_SPEED);
     Control_Line_Add(&pquadrangle->dot1, &origin, STEP_MAX_HIGH_SPEED);
+}
+
+void Control_WaitRectPos_Task(void)
+{
+    if (Receive_FindFirstVaildString(&uart_receive_with_K210, cmd_start, cmd_end, data) == RECEIVE_SUCCESS)
+    {
+        if (sscanf(data,
+                   "%f, %f, %f, %f, %f, %f, %f, %f",
+                   &rect_to_walk.dot1.x.pos,
+                   &rect_to_walk.dot1.y.pos,
+                   &rect_to_walk.dot2.x.pos,
+                   &rect_to_walk.dot2.y.pos,
+                   &rect_to_walk.dot3.x.pos,
+                   &rect_to_walk.dot3.y.pos,
+                   &rect_to_walk.dot4.x.pos,
+                   &rect_to_walk.dot4.y.pos) != EOF)
+        {
+            dot_init(&rect_to_walk.dot1, rect_to_walk.dot1.x.pos, rect_to_walk.dot1.y.pos);
+            dot_init(&rect_to_walk.dot2, rect_to_walk.dot2.x.pos, rect_to_walk.dot2.y.pos);
+            dot_init(&rect_to_walk.dot3, rect_to_walk.dot3.x.pos, rect_to_walk.dot3.y.pos);
+            dot_init(&rect_to_walk.dot4, rect_to_walk.dot4.x.pos, rect_to_walk.dot4.y.pos);
+            Control_WalkQuadrangle(&rect_to_walk);
+            Task_Remove(&task_wait_rect_pos);
+        }
+    }
 }
 
 /**

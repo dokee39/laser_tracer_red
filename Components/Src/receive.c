@@ -19,11 +19,10 @@
 
 /* 在此加入 uart_receive, 并将其放入地址列表中 BEGIN */
 // uart_receive 要 extern 出去
-uart_receive_t uart_receive_for_debug;
 uart_receive_t uart_receive_with_K210;
 
-uart_receive_t *(uart_receive_list[]) = {&uart_receive_for_debug, &uart_receive_with_K210};
-uint8_t num_of_uart_receives = 2;
+uart_receive_t *(uart_receive_list[]) = {&uart_receive_with_K210};
+uint8_t num_of_uart_receives = 1;
 /* 在此加入 uart_receive, 并将其放入地址列表中 END */
 
 /**

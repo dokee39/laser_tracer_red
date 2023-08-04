@@ -19,9 +19,11 @@
 
 // 任务计数周期 (TIM_TASK_INTERVAL 的倍数)
 #define TASK_CNT_ADJUST 1u
-#define TASK_CNT_CONTROL 1u
+#define TASK_CNT_CONTROL 2u
 #define TASK_CNT_CONTROL_WALK_LINE 1u
+#define TASK_CNT_MASTER 1u
 #define TASK_CNT_LED 30u
+#define TASK_CNT_WAIT_RECT_POS 4u
 
 /* 添加时间片任务结构体并 extern BEGIN */
 extern TimesilceTaskObj task_control;
@@ -29,6 +31,7 @@ extern TimesilceTaskObj task_adjust;
 extern TimesilceTaskObj task_control_walk_line;
 extern TimesilceTaskObj task_master;
 extern TimesilceTaskObj task_LED;
+extern TimesilceTaskObj task_wait_rect_pos;
 /* 添加时间片任务结构体并 extern END */
 
 void TaskProcess_Init(void);

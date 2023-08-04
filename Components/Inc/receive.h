@@ -15,8 +15,8 @@
 #include "usart.h"
 
 /* Define the Size Here */
-#define RxBuf_SIZE 64
-#define RxMainBuf_SIZE 128
+#define RxBuf_SIZE 32
+#define RxMainBuf_SIZE 64
 
 typedef struct
 {
@@ -45,7 +45,6 @@ typedef enum
 
 /* 在此加入 uart_receive 的外部声明 BEGIN */
 // C 文件中对应的也要修改
-extern uart_receive_t uart_receive_for_debug;
 extern uart_receive_t uart_receive_with_K210;
 /* 在此加入 uart_receive 的外部声明 END */
 
