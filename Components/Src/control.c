@@ -44,8 +44,8 @@ typedef struct
     float delta_y;
 } line_t;
 
-#define STEP_MAX_HIGH_SPEED 0.5f
-#define STEP_MAX_LOW_SPEED 0.3f
+#define STEP_MAX_HIGH_SPEED 0.66f
+#define STEP_MAX_LOW_SPEED 0.45f
 
 #define LINE_NUM_MAX 10
 line_t line_list[LINE_NUM_MAX];

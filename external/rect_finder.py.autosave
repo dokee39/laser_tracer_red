@@ -1,9 +1,0 @@
-from machine import UART
-from fpioa_manager import fm
-from machine import Timer
-
-fm.register(18, fm.fpioa.UART1_TX, force=True)
-fm.register(19, fm.fpioa.UART1_RX, force=True)
-uart1 = UART(UART.UART1, 115200, 8, 0, 1, timeout=1000, read_buf_len=128)
-
-tim = machine.Timer(0, Timer.CHANNEL0, mode=Timer.MODE_ONE_SHOT, period=1000, unit=Timer.UNIT_MS, callback=None, arg=None, start=True, priority=1, div=0)

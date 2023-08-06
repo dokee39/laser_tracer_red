@@ -57,24 +57,24 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define adjust_left_Pin GPIO_PIN_4
+#define adjust_left_GPIO_Port GPIOA
+#define adjust_right_Pin GPIO_PIN_5
+#define adjust_right_GPIO_Port GPIOA
+#define key_reset_Pin GPIO_PIN_6
+#define key_reset_GPIO_Port GPIOA
 #define key_pause_Pin GPIO_PIN_7
 #define key_pause_GPIO_Port GPIOA
 #define key_switch_Pin GPIO_PIN_4
 #define key_switch_GPIO_Port GPIOC
 #define key_OK_Pin GPIO_PIN_5
 #define key_OK_GPIO_Port GPIOC
-#define key_reset_Pin GPIO_PIN_10
-#define key_reset_GPIO_Port GPIOB
+#define adjust_up_Pin GPIO_PIN_10
+#define adjust_up_GPIO_Port GPIOB
+#define adjust_down_Pin GPIO_PIN_11
+#define adjust_down_GPIO_Port GPIOB
 #define LED_Pin GPIO_PIN_8
 #define LED_GPIO_Port GPIOA
-#define adjust_down_Pin GPIO_PIN_11
-#define adjust_down_GPIO_Port GPIOA
-#define adjust_up_Pin GPIO_PIN_12
-#define adjust_up_GPIO_Port GPIOA
-#define adjust_right_Pin GPIO_PIN_10
-#define adjust_right_GPIO_Port GPIOC
-#define adjust_left_Pin GPIO_PIN_11
-#define adjust_left_GPIO_Port GPIOC
 #define OLED_SCL_Pin GPIO_PIN_8
 #define OLED_SCL_GPIO_Port GPIOB
 #define OLED_SDA_Pin GPIO_PIN_9
@@ -96,6 +96,10 @@ void Error_Handler(void);
 #define htim_reset htim7
 #define TIM_RESET_INTERVAL 36u // 单位：ms
 /* 定时器及其通道马甲及定时时间间隔说明 END */
+
+/* 串口马甲 BEGIN */
+#define huart_with_k210 huart2
+/* 串口马甲 END */
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

@@ -27,8 +27,8 @@ adjust_range_t adjust_range;
 #define KEY_DELAY 2u // 表示按键消抖的时间，为 TIM_TASK_INTERVAL 的倍数 -> 50ms
 #define KEY_DELAY_FAST 40u // 表示按键进入快速模式的时间
 
-#define ADJUST_STEP 0.10f // 调整的步进
-#define ADJUST_STEP_LARGE 0.30f // 调整的快步进
+#define ADJUST_STEP 0.05f // 调整的步进
+#define ADJUST_STEP_LARGE 0.5f // 调整的快步进
 
 
 /**
